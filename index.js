@@ -38,6 +38,14 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/alltoys/:subcategory", async (req, res) => {
+      console.log(req.params.subcategory);
+      const query = { subcategory: req.params.subcategory };
+      const sub = await toysCollection.find(query).toArray();
+      console.log(sub);
+      res.send(sub);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
