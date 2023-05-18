@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const port = process.env.PORT || 5000;
 const app = express();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 // middleware
 app.use(cors());
@@ -38,12 +38,19 @@ async function run() {
       res.send(result);
     });
 
-    app.get("/alltoys/:subcategory", async (req, res) => {
-      console.log(req.params.subcategory);
-      const query = { subcategory: req.params.subcategory };
-      const sub = await toysCollection.find(query).toArray();
-      console.log(sub);
-      res.send(sub);
+    app.get("/alltoy", async (req, res) => {
+      //  console.log(req.params.email);
+      // const query = { email: req.params.email };
+      // const result = await toysCollection.find(query).toArray();
+      // console.log(result);
+      console.log(req.query.email);
+      let query = {};
+      if (req.query?.email) {
+        query = { email: req.query.email };
+      }
+      const result = await toysCollection.find(query).toArray();
+      console.log(result);
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
