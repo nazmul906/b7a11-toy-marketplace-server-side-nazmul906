@@ -38,34 +38,6 @@ async function run() {
       res.send(result);
     });
 
-    // app.get("alltoys/", async (req, res) => {
-    //   //   console.log(req.params.subcategories);
-    //     const sub = await toysCollection
-    //       .find({
-    //         subcategory: req.params.subcategories,
-    //       })
-    //       .toArray();
-    //     console.log(sub);
-    //     res.send(sub);
-    // //   let query = {};
-    // //   if (req.query?.subcategory) {
-    // //     query = { subcategory: req.query.subcategory };
-    // //   }
-    // //   const result = await bookingCollection.find(query).toArray();
-    // //   console.log(result);
-    // });
-
-    app.get("/alltoys/:subcategory", async (req, res) => {
-      console.log(req.params.subcategory);
-      const jobs = await toysCollection
-        .find({
-          subcategory: req.params.subcategory,
-        })
-        .toArray();
-      //   console.log(jobs);
-      res.send(jobs);
-    });
-
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
