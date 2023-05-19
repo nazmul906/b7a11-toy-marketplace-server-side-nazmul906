@@ -6,7 +6,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 // middleware
 app.use(cors());
-app.use(express());
+app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Helen of Toy");
@@ -71,6 +71,15 @@ async function run() {
       // console.log(result);
       res.send(result);
     });
+
+    app.post("/addtoy", async (req, res) => {
+      // console.log(req.body);
+      const body = req.body;
+      const result = await toysCollection.insertOne(body);
+      res.send(result);
+    });
+
+    // delete
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
