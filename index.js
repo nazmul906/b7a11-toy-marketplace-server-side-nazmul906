@@ -33,12 +33,12 @@ async function run() {
     const toysCollection = client.db("toyMarket").collection("alltoys");
 
     app.get("/alltoys", async (req, res) => {
-      const cursor = toysCollection.find();
+      const cursor = toysCollection.find().limit(20);
       const result = await cursor.toArray();
       res.send(result);
     });
     app.get("/alltoys/:subcategory", async (req, res) => {
-      console.log(req.params.subcategory);
+      // console.log(req.params.subcategory);
       const query = { subcategory: req.params.subcategory };
       const sub = await toysCollection.find(query).toArray();
       // console.log(sub);
@@ -56,7 +56,7 @@ async function run() {
         query = { email: req.query.email };
       }
       const result = await toysCollection.find(query).toArray();
-      console.log(result);
+      // console.log(result);
       res.send(result);
     });
 
@@ -79,10 +79,37 @@ async function run() {
       res.send(result);
     });
 
+    // update
+    // pictureURL: updatetoy.pictureURL,
+    //       name: updatetoy.name,
+    //       sellerName: updatetoy.sellerName,
+    //       subcategory: updatetoy.subcategory,
+    app.put("/update/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      // console.log("update", id);
+      const options = { upsert: true };
+      const updatetoy = req.body;
+      const updateDoc = {
+        $set: {
+          price: updatetoy.price,
+          // rating: updatetoy.rating,
+          quantity: updatetoy.quantity,
+          description: updatetoy.description,
+          // email: updatetoy.email,
+        },
+      };
+
+      const result = await toysCollection.updateOne(filter, updateDoc, options);
+
+      // console.log(result);
+      res.send(result);
+    });
+
     // delete
     app.delete("/singletoy/:id", async (req, res) => {
       const id = req.params.id;
-      console.log(id);
+      // console.log(id);
       const query = { _id: new ObjectId(id) };
       const result = await toysCollection.deleteOne(query);
       res.send(result);
