@@ -32,6 +32,23 @@ async function run() {
     await client.connect();
     const toysCollection = client.db("toyMarket").collection("alltoys");
 
+    // indexing for search
+    const indexkey = { name: 1 }; /*field name..toyfield */
+    const indexOption = { name: "toyname" };
+    const result = await toysCollection.createIndex(indexkey, indexOption);
+    // console.log(result);
+    app.get("/searchbytoyname/:text", async (req, res) => {
+      const text = req.params.text;
+      // console.log(text);
+      const result = await toysCollection
+        .find({
+          $or: [{ name: { $regex: text, $options: "i" } }],
+        })
+        .toArray();
+      // console.log(result);
+      res.send(result);
+    });
+
     app.get("/alltoys", async (req, res) => {
       const cursor = toysCollection.find().limit(20);
       const result = await cursor.toArray();
