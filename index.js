@@ -62,25 +62,59 @@ async function run() {
       res.send(sub);
     });
 
+    // get user toy data  by his logged in email for myoty page
     app.get("/alltoy", async (req, res) => {
-      //  console.log(req.params.email);
-      // const query = { email: req.params.email };
-      // const result = await toysCollection.find(query).toArray();
-      // console.log(result);
       // console.log(req.query.email);
+      const { email, order } = req.query;
+      // console.log(req.query.email);
+      // console.log(req.query.order);
+
+      // let query = {};
+      // if (req.query?.email) {
+      //   query = { email: req.query.email };
+      // }
+
       let query = {};
-      if (req.query?.email) {
-        query = { email: req.query.email };
+      if (email) {
+        email;
       }
+      const sortChoice = {};
+      if (order === "ascending") {
+        sortChoice.price = 1;
+      } else if (order === "descending") {
+        sortChoice.price = -1;
+      }
+      //previously sort({ price: 1 })
       const result = await toysCollection
         .find(query)
-        .sort({ price: 1 })
+        .sort(sortChoice)
         .toArray();
       // console.log(result);
       res.send(result);
     });
 
-    // single toy
+    /* it might not work because we have to ascend/descend for same user email */
+    //get ascending/descending toy list based on price for my toy page
+
+    // app.get("/mytoy/:order", async (req, res) => {
+    //   const text = req.params.order;
+    //   console.log(text);
+    //   if ((text = "ascending")) {
+    //     const result = await toysCollection
+    //       .find({ email })
+    //       .sort({ price: 1 })
+    //       .toArray();
+    //     // console.log(result);
+    //     res.send(result);
+    //   } else {
+    //     const result = await toysCollection
+    //       .find({ email })
+    //       .sort({ price: 1 })
+    //       .toArray();
+    //   }
+    // });
+
+    // get single toy
     app.get("/singletoy/:id", async (req, res) => {
       const id = req.params.id;
       // console.log(id);
@@ -92,6 +126,7 @@ async function run() {
       res.send(result);
     });
 
+    // post toy info by logged in user
     app.post("/addtoy", async (req, res) => {
       // console.log(req.body);
       const body = req.body;
@@ -99,11 +134,8 @@ async function run() {
       res.send(result);
     });
 
-    // update
-    // pictureURL: updatetoy.pictureURL,
-    //       name: updatetoy.name,
-    //       sellerName: updatetoy.sellerName,
-    //       subcategory: updatetoy.subcategory,
+    // update single toy info
+
     app.put("/update/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
@@ -117,6 +149,10 @@ async function run() {
           quantity: updatetoy.quantity,
           description: updatetoy.description,
           // email: updatetoy.email,
+          // pictureURL: updatetoy.pictureURL,
+          // name: updatetoy.name,
+          // sellerName: updatetoy.sellerName,
+          // subcategory: updatetoy.subcategory
         },
       };
 
