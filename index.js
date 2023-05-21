@@ -76,7 +76,7 @@ async function run() {
 
       let query = {};
       if (email) {
-        email;
+        query.email = email;
       }
       const sortChoice = {};
       if (order === "ascending") {
